@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil GitHub</title>
+    <!-- Adicione o link para o CSS Bootstrap se necessário -->
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-4">
+                <img id="avatar" class="img-fluid rounded-circle mb-3" src="" alt="Avatar">
+            </div>
+            <div class="col-md-8">
+                <h1 id="name"></h1>
+            </div>
+        </div>
+    </div>
+    <!-- Adicione o link para o JavaScript Bootstrap e o script para carregar os dados do GitHub -->
+</body>
+
+<!-- JavaScript Bootstrap (opcional, mas necessário para alguns recursos do Bootstrap) -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    // URL da API do GitHub para obter dados do usuário
+    const githubApiUrl = 'https://api.github.com/users/tiagoft';
+
+    // Função para carregar os dados do GitHub
+    async function loadGitHubData() {
+        try {
+            const response = await fetch(githubApiUrl);
+            const data = await response.json();
+
+            // Atualiza a imagem do avatar e o nome
+            document.getElementById('avatar').src = data.avatar_url;
+            document.getElementById('name').textContent = data.name;
+        } catch (error) {
+            console.error('Erro ao carregar os dados do GitHub:', error);
+        }
+    }
+
+    // Chama a função para carregar os dados do GitHub quando a página for carregada
+    window.onload = loadGitHubData;
+</script>
+
+
+</html>
