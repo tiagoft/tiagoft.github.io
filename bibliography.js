@@ -64,13 +64,6 @@ function renderHTML(entries) {
   }).join('');
 
   return `
-    <html>
-      <head>
-        <title>BibTeX Entries</title>
-      </head>
-      <body>
         ${html}
-      </body>
-    </html>
   `;
 }
