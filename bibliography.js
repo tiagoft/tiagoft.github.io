@@ -28,6 +28,19 @@ function parseBibtex(bibtex) {
     if (line.startsWith('@')) {
       // Start of a new BibTeX entry
       if (Object.keys(currentEntry).length !== 0) {
+        // yr = current system year
+
+
+        // Get the current system year
+        const currentYear = new Date().getFullYear();
+        lim_year = currentYear-3;
+
+        // Check if the current entry's year is greater than the current system year
+        if (currentEntry.year >= lim_year) {
+          entries.push(currentEntry);
+        }
+        
+        if (currentEntry.year > 
         entries.push(currentEntry);
       }
       currentEntry = {};
