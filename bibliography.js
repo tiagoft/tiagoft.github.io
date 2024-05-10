@@ -39,9 +39,7 @@ function parseBibtex(bibtex) {
         if (currentEntry.year >= lim_year) {
           entries.push(currentEntry);
         }
-        
-        if (currentEntry.year > 
-        entries.push(currentEntry);
+
       }
       currentEntry = {};
       const [type, key] = line.substring(1).split('{');
