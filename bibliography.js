@@ -36,7 +36,7 @@ function parseBibtex(bibtex) {
         lim_year = currentYear-3;
 
         // Check if the current entry's year is greater than the current system year
-        if (currentEntry.year >= lim_year) {
+        if (currentEntry.year > lim_year) {
           entries.push(currentEntry);
         }
 
@@ -62,13 +62,19 @@ function parseBibtex(bibtex) {
 
 // Function to render HTML from BibTeX entries
 function renderHTML(entries) {
+  entries.sort((a, b) => b.year - a.year);
   const html = entries.map(entry => {
+    let doiLink = '';
+    if (entry.doi) {
+      doiLink = `<a href="https://doi.org/${entry.doi}">${entry.doi}</a>`;
+    }
     return `
       <div class="entry">
         <p>
-        ${entry.author},
+        ${entry.author.replace(/ and /g, ', ')},
         <i>"${entry.title}"</i>
         ${entry.journal || entry.booktitle || entry.publisher || entry.howpublished}, ${entry.year}
+        ${doiLink}
         </p>
       </div>
     `;
