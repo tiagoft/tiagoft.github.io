@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="bibliography.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Tiago</title>
     <!-- Adicione o link para o CSS Bootstrap se necessário -->
 </head>
@@ -14,16 +15,38 @@
                 <h1 id="name"></h1>
             </div>
             <div class="col-md-4">
-                <img id="avatar" class="img-fluid rounded-circle mb-3" src="" alt="Avatar">
-            </div>
-            <div class="col-md-12"></div>
+                <img id="avatar" class="img-fluid rounded-circle mb-3" src="" alt="Avatar" width="300" onclick="toggleQRCode()">
+                <img id="qrcode" class="img-fluid rounded-circle mb-3" src="qrcode.png" alt="QR Code" width="300" style="display: none;" onclick="toggleQRCode()">
 
-            <div>
+            <script>
+                function toggleQRCode() {
+                    var qrcode = document.getElementById('qrcode');
+                    var avatar = document.getElementById('avatar');
+                    
+                    if (qrcode.style.display === 'none') {
+                        qrcode.style.display = 'block';
+                        avatar.style.display = 'none';
+                    } else {
+                        qrcode.style.display = 'none';
+                        avatar.style.display = 'block';
+                    }
+                }
+            </script>
+            </div>
+            
+
+            <div class="col-md-12" style="background-color: #f2f2f2;">
+            
                 <h2>Publications</h2>
-                <a href="bibliography.bib">Full bibtex file</a>
+                <a href="bibliography.bib">Full bibtex file</a> <br \>
+                <button onclick="copyToClipboard()">Copy contents</button>
                 <div id="bibtexEntries">
-                <!-- Rendered BibTeX entries will be displayed here -->
+                    <!-- Rendered BibTeX entries will be displayed here -->
                 </div>
+                
+
+            
+            </div>
             </div>
         </div>
     </div>
@@ -54,5 +77,17 @@
     window.onload = loadGitHubData;
 </script>
 
+<script>
+    function copyToClipboard() {
+        const bibtexEntries = document.getElementById('bibtexEntries');
+        const range = document.createRange();
+        range.selectNode(bibtexEntries);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand('copy');
+        window.getSelection().removeAllRanges();
+        //alert('HTML copied to clipboard!');
+    }
+    </script>
 
 </html>
