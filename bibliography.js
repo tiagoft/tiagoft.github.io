@@ -36,7 +36,7 @@ function parseBibtex(bibtex) {
         lim_year = currentYear-3;
 
         // Check if the current entry's year is greater than the current system year
-        if (currentEntry.year > lim_year) {
+        if (currentEntry.year >= lim_year) {
           entries.push(currentEntry);
         }
 
