@@ -2,31 +2,42 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="bibliography.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Tiago Fernandes Tavares</title>
+    
+    <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+    header {
+      margin-top: 80px;
+    }
+    h1, h2, h3 {
+      font-weight: 600;
+    }
+    footer {
+      background-color: #f8f9fa;
+      margin-top: 40px;
+    }
+    .profile-photo {
+      width: 180px;
+      border-radius: 50%;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+  </style>
     <!-- Adicione o link para o CSS Bootstrap se necessário -->
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-8">
-                <h1 id="name">Tiago Fernandes Tavares</h1>
-                <h2>Machine Learning | Education | Audio, Signal, and Language Processing</h2>
-                <p>tiagoft1 at insper dot edu dot br</p>
-                <p>Assistant Professor at <a href="https://www.insper.edu.br/">Insper</a></p>
-                <p>
-                    <a href="https://scholar.google.com/citations?user=DxjgvG8AAAAJ&hl=en">Google Scholar</a> | 
-                    <a href="https://lattes.cnpq.br/0738838630843591">Lattes</a> 
-                |
-                <a href="https://tiagoft.github.io/blog">Blog</a>
-                 |
-                <a href="https://www.linkedin.com/in/tiago-fernandes-tavares/"> Linkedin </a>
-            </p>
-            </div>
-            <div class="col-md-4">
+
+
+
+   <header class="container text-center">
+        <center>
+        <div class="col-md-4">
                 <img id="avatar" class="img-fluid rounded-circle mb-3" src="" alt="Avatar" width="300" onclick="toggleQRCode()">
                 <img id="qrcode" class="img-fluid rounded-circle mb-3" src="qrcode.png" alt="QR Code" width="300" style="display: none;" onclick="toggleQRCode()">
 
@@ -45,73 +56,90 @@
                 }
             </script>
             </div>
-
-            <div class="col-md-12" style="background-color: #f2f2f2;padding:10px;">
+        </center>
+    <h1>Tiago Fernandes Tavares</h1>
+    <h3 class="text-muted">Assistant Professor, <a href="https://www.insper.edu.br/">Insper</a></h3>
+    <p class="lead mt-3">
+      I design machine learning methods that reveal structure and meaning in signals, language, and data.
+    </p>
+    <p>
+      <a href="https://scholar.google.com/citations?user=DxjgvG8AAAAJ&hl=en">Google Scholar</a> |
+      <a href="https://orcid.org/0000-0002-9104-613X">ORCID</a> |
+      <a href="https://lattes.cnpq.br/0738838630843591">Lattes</a> |
+      <a href="https://tiagoft.github.io/blog">Blog</a> |
+      <a href="https://www.linkedin.com/in/tiago-fernandes-tavares/">LinkedIn</a>
+    </p>
+  </header>
+  
+            
+            <section id="about" class="container my-5">
+                
                 <h2>About</h2>
-                I apply machine learning, signal processing, and data science to
-                 analyze complex datasets. 
-                 My recent work includes applications 
-                 in audio and text processing, as well 
-                 as data mining focused on societal issues. 
-                 I'm interested in connecting with researchers, 
-                 innovators, and organizational partners working in these 
-                 areas to share insights and explore potential collaborations.
-            </div>
+                <p>My research focuses on computational models that reveal structure and meaning in signals, language, and data. From audio and music to legal text and urban ecology, I design methods that make complex information interpretable across diverse domains. I am always interested in connecting with researchers, practitioners, and organizations who share an interest in building interpretable, data-driven approaches to real-world challenges.
+            </p>
+            </section>
             
 
-            <div class="col-md-12" style="background-color: #f2f2f2;padding:10px;">
+              <section id="publications" class="container my-5">
             
                 <h2> Publications </h2>
                 <a href="bibliography.bib">Full bibtex file</a> <br \>
                 <button onclick="copyToClipboard()">Copy contents</button>
-                <div id="bibtexEntries">
-                    <!-- Rendered BibTeX entries will be displayed here -->
-                </div>
-                
-
+            <div id="bibtexEntries">
+            <!-- Rendered BibTeX entries will be displayed here -->
+            </div>
+            </section>
             
-            </div>
-            </div>
+        </div>
         </div>
     </div>
     <!-- Adicione o link para o JavaScript Bootstrap e o script para carregar os dados do GitHub -->
+
+      <!-- Contact Section -->
+  <section id="contact" class="container my-5">
+    <h2>Contact</h2>
+    <p>Email: tiagoft1 at insper dot edu dot br</p>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center py-4">
+    <p>© 2025 Tiago Fernandes Tavares</p>
+  </footer>
+
 </body>
 
+
+
 <!-- JavaScript Bootstrap (opcional, mas necessário para alguns recursos do Bootstrap) -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script>
-    // URL da API do GitHub para obter dados do usuário
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="bibliography.js"></script>
+  <script>
+    // Load GitHub avatar
     const githubApiUrl = 'https://api.github.com/users/tiagoft';
-
-    // Função para carregar os dados do GitHub
     async function loadGitHubData() {
-        try {
-            const response = await fetch(githubApiUrl);
-            const data = await response.json();
-
-            // Atualiza a imagem do avatar e o nome
-            document.getElementById('avatar').src = data.avatar_url;
-            document.getElementById('name').textContent = data.name;
-        } catch (error) {
-            console.error('Erro ao carregar os dados do GitHub:', error);
-        }
+      try {
+        const response = await fetch(githubApiUrl);
+        const data = await response.json();
+        document.getElementById('avatar').src = data.avatar_url;
+      } catch (error) {
+        console.error('Error loading GitHub data:', error);
+      }
     }
-
-    // Chama a função para carregar os dados do GitHub quando a página for carregada
     window.onload = loadGitHubData;
-</script>
 
-<script>
+    // Copy to clipboard
     function copyToClipboard() {
-        const bibtexEntries = document.getElementById('bibtexEntries');
-        const range = document.createRange();
-        range.selectNode(bibtexEntries);
-        window.getSelection().removeAllRanges();
-        window.getSelection().addRange(range);
-        document.execCommand('copy');
-        window.getSelection().removeAllRanges();
-        //alert('HTML copied to clipboard!');
+      const bibtexEntries = document.getElementById('bibtexEntries');
+      const range = document.createRange();
+      range.selectNode(bibtexEntries);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
+      alert('Publications copied to clipboard!');
     }
-    </script>
+  </script>
 
+  
 </html>
