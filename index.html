@@ -48,28 +48,26 @@
   </div>
 </nav>
 
-   <header class="container text-center">
-        <center>
-        <div class="col-md-4">
-                <img id="avatar" class="img-fluid rounded-circle mb-3" src="" alt="Avatar" width="300" onclick="toggleQRCode()" style="display:none;">
-                <img id="qrcode" class="img-fluid rounded-circle mb-3" src="qrcode.png" alt="QR Code" width="300" style="display: none;" onclick="toggleQRCode()">
-
-            <script>
-                function toggleQRCode() {
-                    var qrcode = document.getElementById('qrcode');
-                    var avatar = document.getElementById('avatar');
-                    
-                    if (qrcode.style.display === 'none') {
-                        qrcode.style.display = 'block';
-                        avatar.style.display = 'none';
-                    } else {
-                        qrcode.style.display = 'none';
-                        avatar.style.display = 'block';
-                    }
-                }
-            </script>
-            </div>
-        </center>
+  <header class="container text-center">
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        <img id="avatar" class="img-fluid rounded-circle mb-3" src="" alt="Avatar" width="300" onclick="toggleQRCode()" style="display:none;">
+        <img id="qrcode" class="img-fluid rounded-circle mb-3" src="qrcode.png" alt="QR Code" width="300" style="display:none;" onclick="toggleQRCode()">
+        <script>
+          function toggleQRCode() {
+            var qrcode = document.getElementById('qrcode');
+            var avatar = document.getElementById('avatar');
+            if (qrcode.style.display === 'none') {
+              qrcode.style.display = 'block';
+              avatar.style.display = 'none';
+            } else {
+              qrcode.style.display = 'none';
+              avatar.style.display = 'block';
+            }
+          }
+        </script>
+      </div>
+    </div>
     <h1>Tiago Fernandes Tavares</h1>
     <h3 class="text-muted">Assistant Professor, <a href="https://www.insper.edu.br/">Insper</a></h3>
     <p class="lead mt-3">
