@@ -1,0 +1,90 @@
+import re
+from datetime import datetime
+
+
+def parse_bibtex(content):
+    current_year = datetime.now().year
+    lim_year = current_year - 5
+    entries = []
+
+    for raw in content.split('@')[1:]:
+        lines = raw.strip().split('\n')
+        if not lines:
+            continue
+
+        type_key = lines[0]
+        brace_idx = type_key.find('{')
+        if brace_idx == -1:
+            continue
+
+        entry = {
+            'type': type_key[:brace_idx].strip().lower(),
+            'key': type_key[brace_idx + 1:].replace(',', '').strip(),
+        }
+
+        for line in lines[1:]:
+            line = line.strip()
+            if '=' not in line:
+                continue
+            k, _, v = line.partition('=')
+            field = k.strip().lower()
+            value = re.sub(r'[{}"]', '', v).rstrip(',').strip()
+            entry[field] = value
+
+        try:
+            year = int(entry.get('year', 0))
+        except ValueError:
+            year = 0
+
+        if year >= lim_year:
+            entries.append(entry)
+
+    return entries
+
+
+def render_html(entries):
+    entries = sorted(entries, key=lambda e: int(e.get('year', 0)), reverse=True)
+    parts = []
+    for entry in entries:
+        author = entry.get('author', 'Unknown Author').replace(' and ', ', ')
+        title = f'<i>"{entry["title"]}"</i>' if entry.get('title') else 'Untitled'
+        source = (entry.get('journal') or entry.get('booktitle') or
+                  entry.get('publisher') or entry.get('howpublished') or '')
+        year = entry.get('year', '')
+        doi = entry.get('doi', '').strip()
+        doi_link = f'<a href="https://doi.org/{doi}" target="_blank">{doi}</a>' if doi else ''
+
+        parts.append(
+            f'      <div class="entry mb-2">\n'
+            f'        <p>{author}, {title}. {source}, {year}. {doi_link}</p>\n'
+            f'      </div>'
+        )
+
+    return '\n'.join(parts)
+
+
+def main():
+    with open('bibliography.bib', encoding='utf-8') as f:
+        bibtex = f.read()
+
+    entries = parse_bibtex(bibtex)
+    html = render_html(entries)
+
+    with open('index.html', encoding='utf-8') as f:
+        content = f.read()
+
+    new_content = re.sub(
+        r'<!-- BIBLIOGRAPHY_START -->.*?<!-- BIBLIOGRAPHY_END -->',
+        f'<!-- BIBLIOGRAPHY_START -->\n{html}\n<!-- BIBLIOGRAPHY_END -->',
+        content,
+        flags=re.DOTALL,
+    )
+
+    with open('index.html', 'w', encoding='utf-8') as f:
+        f.write(new_content)
+
+    print(f'Rendered {len(entries)} entries.')
+
+
+if __name__ == '__main__':
+    main()
