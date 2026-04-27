@@ -42,23 +42,39 @@ def parse_bibtex(content):
     return entries
 
 
+TYPE_BADGE = {
+    'article':       ('Journal',    'primary'),
+    'inproceedings': ('Conference', 'success'),
+    'misc':          ('Preprint',   'warning'),
+}
+
+
 def render_html(entries):
     entries = sorted(entries, key=lambda e: int(e.get('year', 0)), reverse=True)
-    parts = []
-    for entry in entries:
-        author = entry.get('author', 'Unknown Author').replace(' and ', ', ')
-        title = f'<i>"{entry["title"]}"</i>' if entry.get('title') else 'Untitled'
-        source = (entry.get('journal') or entry.get('booktitle') or
-                  entry.get('publisher') or entry.get('howpublished') or '')
-        year = entry.get('year', '')
-        doi = entry.get('doi', '').strip()
-        doi_link = f'<a href="https://doi.org/{doi}" target="_blank">{doi}</a>' if doi else ''
 
-        parts.append(
-            f'      <div class="entry mb-2">\n'
-            f'        <p>{author}, {title}. {source}, {year}. {doi_link}</p>\n'
-            f'      </div>'
-        )
+    by_year = {}
+    for entry in entries:
+        by_year.setdefault(entry.get('year', 'Unknown'), []).append(entry)
+
+    parts = []
+    for year in sorted(by_year, reverse=True):
+        parts.append(f'      <h4 class="mt-4 mb-2 border-bottom pb-1">{year}</h4>')
+        for entry in by_year[year]:
+            author = entry.get('author', 'Unknown Author').replace(' and ', ', ')
+            title = f'<i>"{entry["title"]}"</i>' if entry.get('title') else 'Untitled'
+            source = (entry.get('journal') or entry.get('booktitle') or
+                      entry.get('publisher') or entry.get('howpublished') or '')
+            doi = entry.get('doi', '').strip()
+            doi_link = f'<a href="https://doi.org/{doi}" target="_blank">{doi}</a>' if doi else ''
+
+            label, color = TYPE_BADGE.get(entry.get('type', ''), ('Other', 'secondary'))
+            badge = f'<span class="badge badge-{color} mr-2">{label}</span>'
+
+            parts.append(
+                f'      <div class="entry mb-2">\n'
+                f'        <p>{badge}{author}, {title}. {source}. {doi_link}</p>\n'
+                f'      </div>'
+            )
 
     return '\n'.join(parts)
 
