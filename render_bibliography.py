@@ -65,7 +65,13 @@ def render_html(entries):
             source = (entry.get('journal') or entry.get('booktitle') or
                       entry.get('publisher') or entry.get('howpublished') or '')
             doi = entry.get('doi', '').strip()
-            doi_link = f'<a href="https://doi.org/{doi}" target="_blank">{doi}</a>' if doi else ''
+            url = entry.get('url', '').strip()
+            if doi:
+                doi_link = f'<a href="https://doi.org/{doi}" target="_blank">{doi}</a>'
+            elif url:
+                doi_link = f'<a href="{url}" target="_blank">{url}</a>'
+            else:
+                doi_link = ''
 
             label, color = TYPE_BADGE.get(entry.get('type', ''), ('Other', 'secondary'))
             badge = f'<span class="badge badge-{color} mr-2">{label}</span>'
