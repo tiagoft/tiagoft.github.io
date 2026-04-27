@@ -51,7 +51,7 @@
    <header class="container text-center">
         <center>
         <div class="col-md-4">
-                <img id="avatar" class="img-fluid rounded-circle mb-3" src="" alt="Avatar" width="300" onclick="toggleQRCode()">
+                <img id="avatar" class="img-fluid rounded-circle mb-3" src="" alt="Avatar" width="300" onclick="toggleQRCode()" style="display:none;">
                 <img id="qrcode" class="img-fluid rounded-circle mb-3" src="qrcode.png" alt="QR Code" width="300" style="display: none;" onclick="toggleQRCode()">
 
             <script>
@@ -218,7 +218,9 @@
       try {
         const response = await fetch(githubApiUrl);
         const data = await response.json();
-        document.getElementById('avatar').src = data.avatar_url;
+        const avatar = document.getElementById('avatar');
+        avatar.src = data.avatar_url;
+        avatar.style.display = 'block';
       } catch (error) {
         console.error('Error loading GitHub data:', error);
       }
