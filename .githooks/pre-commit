@@ -1,0 +1,6 @@
+#!/bin/sh
+# Re-render bibliography whenever bibliography.bib is staged.
+if git diff --cached --name-only | grep -q 'bibliography.bib'; then
+  python3 render_bibliography.py
+  git add index.html
+fi

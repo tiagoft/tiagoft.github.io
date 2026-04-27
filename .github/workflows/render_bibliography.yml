@@ -1,14 +1,12 @@
-name: Render Bibliography
+name: Validate Bibliography
 
 on:
   push:
     branches: [main]
 
 jobs:
-  render:
+  validate:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -19,12 +17,10 @@ jobs:
       - name: Render bibliography
         run: python render_bibliography.py
 
-      - name: Commit rendered HTML
+      - name: Fail if index.html was not up to date
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          if ! git diff --staged --quiet; then
-            git commit -m "chore: render bibliography [skip ci]"
-            git push
+          if ! git diff --quiet index.html; then
+            echo "index.html is out of sync with bibliography.bib — run render_bibliography.py locally before committing."
+            git diff index.html
+            exit 1
           fi
