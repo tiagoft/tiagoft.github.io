@@ -9,11 +9,11 @@
     <meta property="og:description" content="Machine learning researcher and professor at Insper (São Paulo). Audio-text representation learning, ML foundations, and AI for education.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tiagoft.github.io/">
-    <meta property="og:image" content="https://tiagoft.github.io/qrcode.png">
+    <meta property="og:image" content="https://tiagoft.github.io/tiagofoto.jpg">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Tiago Fernandes Tavares | Machine Learning Researcher | Insper">
     <meta name="twitter:description" content="Machine learning researcher and professor at Insper (São Paulo). Audio-text representation learning, ML foundations, and AI for education.">
-    <meta name="twitter:image" content="https://tiagoft.github.io/qrcode.png">
+    <meta name="twitter:image" content="https://tiagoft.github.io/tiagofoto.jpg">
     <link rel="canonical" href="https://tiagoft.github.io/">
     <link rel="me" href="https://scholar.google.com/citations?user=DxjgvG8AAAAJ">
     <link rel="me" href="https://orcid.org/0000-0002-9104-613X">
@@ -565,7 +565,7 @@
   <header class="container text-center">
     <div class="row justify-content-center">
       <div class="col-md-4">
-        <img id="avatar" class="img-fluid rounded-circle mb-3" src="" alt="Tiago Fernandes Tavares" width="300" onclick="toggleQRCode()" style="display:none;">
+        <img id="avatar" class="img-fluid rounded-circle mb-3" src="tiagofoto.jpg" alt="Tiago Fernandes Tavares" width="300" height="300" onclick="toggleQRCode()">
         <img id="qrcode" class="img-fluid rounded-circle mb-3" src="qrcode.png" alt="QR Code" width="300" style="display:none;" onclick="toggleQRCode()">
         <script>
           function toggleQRCode() {
@@ -706,21 +706,6 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
   <script>
-    // Load GitHub avatar
-    const githubApiUrl = 'https://api.github.com/users/tiagoft';
-    async function loadGitHubData() {
-      try {
-        const response = await fetch(githubApiUrl);
-        const data = await response.json();
-        const avatar = document.getElementById('avatar');
-        avatar.src = data.avatar_url;
-        avatar.style.display = 'block';
-      } catch (error) {
-        console.error('Error loading GitHub data:', error);
-      }
-    }
-    window.onload = loadGitHubData;
-
     // Assemble email at runtime so static source contains no harvestable address
     const u = 'tiagoft1', d = 'insper.edu.br';
     const emailEl = document.getElementById('contact-email');
