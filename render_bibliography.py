@@ -86,12 +86,6 @@ def render_html(entries):
     return '\n'.join(parts)
 
 
-ARTICLE_TYPE = {
-    'article':       'ScholarlyArticle',
-    'inproceedings': 'ScholarlyArticle',
-}
-
-
 def render_jsonld(entries):
     items = []
     for entry in entries:
@@ -105,7 +99,7 @@ def render_jsonld(entries):
         url = entry.get('url', '').strip()
 
         item = {
-            '@type': ARTICLE_TYPE.get(entry.get('type', ''), 'Article'),
+            '@type': 'ScholarlyArticle',
             'name': entry.get('title', ''),
             'author': authors,
             'datePublished': entry.get('year', ''),
