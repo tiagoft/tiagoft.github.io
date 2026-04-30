@@ -694,7 +694,7 @@
   <section id="contact" class="container my-5">
     <h2>Contact</h2>
     <address>
-      <a href="mailto:tiagoft1@insper.edu.br">tiagoft1@insper.edu.br</a>
+      <span id="contact-email"></span>
     </address>
   </section>
 
@@ -720,6 +720,11 @@
       }
     }
     window.onload = loadGitHubData;
+
+    // Assemble email at runtime so static source contains no harvestable address
+    const u = 'tiagoft1', d = 'insper.edu.br';
+    const emailEl = document.getElementById('contact-email');
+    emailEl.innerHTML = '<a href="mailto:' + u + '@' + d + '">' + u + '@' + d + '</a>';
 
     // Copy to clipboard
     function copyToClipboard() {
