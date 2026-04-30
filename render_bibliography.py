@@ -114,7 +114,8 @@ def render_jsonld(entries):
 
         items.append(item)
 
-    block = json.dumps(items, ensure_ascii=False, indent=2)
+    graph = {'@context': 'https://schema.org', '@graph': items}
+    block = json.dumps(graph, ensure_ascii=False, indent=2)
     return f'    <script type="application/ld+json">\n    {block}\n    </script>'
 
 
