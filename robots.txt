@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://tiagoft.github.io/sitemap.xml
