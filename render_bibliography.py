@@ -1,3 +1,4 @@
+import json
 import re
 from datetime import datetime
 
@@ -85,12 +86,51 @@ def render_html(entries):
     return '\n'.join(parts)
 
 
+ARTICLE_TYPE = {
+    'article':       'ScholarlyArticle',
+    'inproceedings': 'ScholarlyArticle',
+}
+
+
+def render_jsonld(entries):
+    items = []
+    for entry in entries:
+        authors = [
+            {'@type': 'Person', 'name': a.strip()}
+            for a in entry.get('author', '').split(' and ')
+            if a.strip()
+        ]
+        source = entry.get('journal') or entry.get('booktitle') or ''
+        doi = entry.get('doi', '').strip()
+        url = entry.get('url', '').strip()
+
+        item = {
+            '@type': ARTICLE_TYPE.get(entry.get('type', ''), 'Article'),
+            'name': entry.get('title', ''),
+            'author': authors,
+            'datePublished': entry.get('year', ''),
+        }
+        if source:
+            item['isPartOf'] = {'name': source}
+        if doi:
+            item['url'] = f'https://doi.org/{doi}'
+            item['identifier'] = doi
+        elif url:
+            item['url'] = url
+
+        items.append(item)
+
+    block = json.dumps(items, ensure_ascii=False, indent=2)
+    return f'    <script type="application/ld+json">\n    {block}\n    </script>'
+
+
 def main():
     with open('bibliography.bib', encoding='utf-8') as f:
         bibtex = f.read()
 
     entries = parse_bibtex(bibtex)
     html = render_html(entries)
+    jsonld = render_jsonld(entries)
 
     with open('index.html', encoding='utf-8') as f:
         content = f.read()
@@ -99,6 +139,12 @@ def main():
         r'<!-- BIBLIOGRAPHY_START -->.*?<!-- BIBLIOGRAPHY_END -->',
         f'<!-- BIBLIOGRAPHY_START -->\n{html}\n<!-- BIBLIOGRAPHY_END -->',
         content,
+        flags=re.DOTALL,
+    )
+    new_content = re.sub(
+        r'<!-- JSONLD_START -->.*?<!-- JSONLD_END -->',
+        f'<!-- JSONLD_START -->\n{jsonld}\n<!-- JSONLD_END -->',
+        new_content,
         flags=re.DOTALL,
     )
 
