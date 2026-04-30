@@ -89,8 +89,15 @@ def render_html(entries):
 def render_jsonld(entries):
     items = []
     for entry in entries:
+        def make_author(name):
+            name = name.strip()
+            node = {'@type': 'Person', 'name': name}
+            if 'Tiago' in name and 'Tavares' in name:
+                node['@id'] = 'https://tiagoft.github.io/'
+            return node
+
         authors = [
-            {'@type': 'Person', 'name': a.strip()}
+            make_author(a)
             for a in entry.get('author', '').split(' and ')
             if a.strip()
         ]
