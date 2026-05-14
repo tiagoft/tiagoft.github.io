@@ -148,6 +148,7 @@ def render_html(entries):
             else:
                 doi_link = ''
 
+            github = entry.get('github', '').strip()
             label, color = TYPE_BADGE.get(entry.get('type', ''), ('Other', 'secondary'))
             badge = f'<span class="badge badge-{color} mr-2">{label}</span>'
             citation = f'{badge}{author}, {title}'
@@ -155,6 +156,8 @@ def render_html(entries):
                 citation += f'. {source}'
             if doi_link:
                 citation += f'. {doi_link}'
+            if github:
+                citation += f' <a href="{github}" target="_blank" rel="noopener noreferrer">[Code]</a>'
 
             parts.append(
                 f'      <div id="{publication_fragment(entry)}" class="entry mb-2">\n'
