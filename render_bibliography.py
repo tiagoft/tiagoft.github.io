@@ -128,8 +128,20 @@ def parse_bibtex(content):
     return entries
 
 
+def author_names(entry):
+    names = []
+    for name in entry.get('author', '').split(' and '):
+        name = ' '.join(name.split())
+        if ',' in name:
+            last, _, first = name.partition(',')
+            name = f'{first.strip()} {last.strip()}'
+        if name:
+            names.append(name)
+    return names
+
+
 def plain_citation(entry):
-    author = ' '.join(entry.get('author', 'Unknown Author').replace(' and ', ', ').split())
+    author = ', '.join(author_names(entry)) or 'Unknown Author'
     citation = f'{author}, "{entry["title"]}"' if entry.get('title') else f'{author}, Untitled'
     source = (entry.get('journal') or entry.get('booktitle') or
               entry.get('publisher') or entry.get('howpublished') or '')
@@ -176,7 +188,7 @@ def render_html(entries):
     for year in sorted(by_year, reverse=True):
         parts.append(f'      <h4 class="mt-4 mb-2 border-bottom pb-1">{year}</h4>')
         for entry in by_year[year]:
-            author = entry.get('author', 'Unknown Author').replace(' and ', ', ')
+            author = ', '.join(author_names(entry)) or 'Unknown Author'
             title = f'<i>"{entry["title"]}"</i>' if entry.get('title') else 'Untitled'
             source = (entry.get('journal') or entry.get('booktitle') or
                       entry.get('publisher') or entry.get('howpublished') or '')
@@ -218,20 +230,12 @@ def render_jsonld(entries):
     items = []
     for entry in entries:
         def make_author(name):
-            name = name.strip()
-            if ',' in name:
-                last, _, first = name.partition(',')
-                name = f'{first.strip()} {last.strip()}'
             node = {'@type': 'Person', 'name': name}
             if 'Tiago' in name and 'Tavares' in name:
                 node['@id'] = PERSON_ID
             return node
 
-        authors = [
-            make_author(a)
-            for a in entry.get('author', '').split(' and ')
-            if a.strip()
-        ]
+        authors = [make_author(a) for a in author_names(entry)]
         source = entry.get('journal') or entry.get('booktitle') or ''
         publisher = entry.get('publisher', '').strip()
         url = article_url(entry)
