@@ -4,6 +4,7 @@ import re
 from datetime import datetime
 
 BASE_URL = 'https://tiagoft.github.io/'
+PERSON_ID = f'{BASE_URL}#person'
 
 
 def publication_fragment(entry):
@@ -48,6 +49,14 @@ def article_url(entry):
         return f'https://arxiv.org/abs/{eprint}'
 
     return publication_page_url(entry)
+
+
+def date_published(entry):
+    # An arXiv record is dated by its identifier (YYMM.number), not by the year of a later venue.
+    match = re.match(r'(\d{2})(\d{2})\.\d+', arxiv_id(entry))
+    if match and not clean_doi(entry):
+        return f'20{match.group(1)}-{match.group(2)}'
+    return entry.get('year', '')
 
 
 def article_identifier(entry):
@@ -210,9 +219,12 @@ def render_jsonld(entries):
     for entry in entries:
         def make_author(name):
             name = name.strip()
+            if ',' in name:
+                last, _, first = name.partition(',')
+                name = f'{first.strip()} {last.strip()}'
             node = {'@type': 'Person', 'name': name}
             if 'Tiago' in name and 'Tavares' in name:
-                node['@id'] = 'https://tiagoft.github.io/'
+                node['@id'] = PERSON_ID
             return node
 
         authors = [
@@ -229,13 +241,15 @@ def render_jsonld(entries):
             '@id': url,
             'name': entry.get('title', ''),
             'author': authors,
-            'datePublished': entry.get('year', ''),
+            'datePublished': date_published(entry),
             'url': url,
-            'mainEntityOfPage': BASE_URL,
             'identifier': article_identifier(entry),
         }
         if source:
-            item['isPartOf'] = {'name': source}
+            item['isPartOf'] = {
+                '@type': 'Periodical' if entry.get('journal') else 'CreativeWork',
+                'name': source,
+            }
         if publisher:
             item['publisher'] = {'@type': 'Organization', 'name': publisher}
 
