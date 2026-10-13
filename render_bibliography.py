@@ -192,7 +192,7 @@ def render_html(entries):
             github = entry.get('github', '').strip()
             note = entry.get('note', '').strip()
             label, color = TYPE_BADGE.get(entry.get('type', ''), ('Other', 'secondary'))
-            badge = f'<span class="badge badge-{color} mr-2">{label}</span>'
+            badge = f'<span class="badge text-bg-{color} me-2">{label}</span>'
             citation = f'{badge}{author}, {title}'
             if source:
                 citation += f'. {source}'
