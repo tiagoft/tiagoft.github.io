@@ -1,3 +1,4 @@
+import html
 import json
 import re
 from datetime import datetime
@@ -95,6 +96,7 @@ def parse_bibtex(content):
         entry = {
             'type': type_key[:brace_idx].strip().lower(),
             'key': type_key[brace_idx + 1:].replace(',', '').strip(),
+            'raw': f'@{raw.strip()}',
         }
 
         for line in lines[1:]:
@@ -115,6 +117,36 @@ def parse_bibtex(content):
             entries.append(entry)
 
     return entries
+
+
+def plain_citation(entry):
+    author = ' '.join(entry.get('author', 'Unknown Author').replace(' and ', ', ').split())
+    citation = f'{author}, "{entry["title"]}"' if entry.get('title') else f'{author}, Untitled'
+    source = (entry.get('journal') or entry.get('booktitle') or
+              entry.get('publisher') or entry.get('howpublished') or '')
+    if source:
+        citation += f'. {source}'
+    doi = clean_doi(entry)
+    link = f'https://doi.org/{doi}' if doi else clean_url(entry)
+    if link:
+        citation += f'. {link}'
+    note = entry.get('note', '').strip()
+    if note:
+        citation += f' ({note})'
+    return citation
+
+
+def data_attribute(value):
+    return html.escape(value, quote=True).replace('\n', '&#10;')
+
+
+COPY_BUTTONS = (
+    '<span class="text-nowrap small">'
+    '<button type="button" class="btn btn-link btn-sm p-0 align-baseline" data-copy="citation">Copy text</button>'
+    ' · '
+    '<button type="button" class="btn btn-link btn-sm p-0 align-baseline" data-copy="bibtex">Copy BibTeX</button>'
+    '</span>'
+)
 
 
 TYPE_BADGE = {
@@ -163,8 +195,10 @@ def render_html(entries):
                 citation += f' <a href="{github}" target="_blank" rel="noopener noreferrer">[Code]</a>'
 
             parts.append(
-                f'      <div id="{publication_fragment(entry)}" class="entry mb-2">\n'
-                f'        <p>{citation}</p>\n'
+                f'      <div id="{publication_fragment(entry)}" class="entry mb-2"'
+                f' data-citation="{data_attribute(plain_citation(entry))}"'
+                f' data-bibtex="{data_attribute(entry["raw"])}">\n'
+                f'        <p>{citation} {COPY_BUTTONS}</p>\n'
                 f'      </div>'
             )
 
