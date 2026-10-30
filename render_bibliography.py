@@ -1,9 +1,9 @@
 import html
 import json
 import re
-from datetime import datetime
 
 BASE_URL = 'https://tiagoft.github.io/'
+PUBLICATIONS_URL = f'{BASE_URL}publications.html'
 PERSON_ID = f'{BASE_URL}#person'
 
 
@@ -13,7 +13,7 @@ def publication_fragment(entry):
 
 
 def publication_page_url(entry):
-    return f'{BASE_URL}#{publication_fragment(entry)}'
+    return f'{PUBLICATIONS_URL}#{publication_fragment(entry)}'
 
 
 def clean_doi(entry):
@@ -88,8 +88,6 @@ def article_identifier(entry):
 
 
 def parse_bibtex(content):
-    current_year = datetime.now().year
-    lim_year = current_year - 5
     entries = []
 
     for raw in content.split('@')[1:]:
@@ -102,10 +100,13 @@ def parse_bibtex(content):
         if brace_idx == -1:
             continue
 
+        # The site-only `featured` field is kept out of the BibTeX visitors copy.
+        raw_lines = [l for l in raw.strip().split('\n')
+                     if not l.strip().lower().startswith('featured')]
         entry = {
             'type': type_key[:brace_idx].strip().lower(),
             'key': type_key[brace_idx + 1:].replace(',', '').strip(),
-            'raw': f'@{raw.strip()}',
+            'raw': '@' + '\n'.join(raw_lines),
         }
 
         for line in lines[1:]:
@@ -117,13 +118,7 @@ def parse_bibtex(content):
             value = re.sub(r'[{}"]', '', v).rstrip(',').strip()
             entry[field] = value
 
-        try:
-            year = int(entry.get('year', 0))
-        except ValueError:
-            year = 0
-
-        if year >= lim_year:
-            entries.append(entry)
+        entries.append(entry)
 
     return entries
 
@@ -186,7 +181,7 @@ def render_html(entries):
 
     parts = []
     for year in sorted(by_year, reverse=True):
-        parts.append(f'      <h4 class="mt-4 mb-2 border-bottom pb-1">{year}</h4>')
+        parts.append(f'      <h2 id="year-{year}" class="h4 mt-4 mb-2 border-bottom pb-1">{year}</h2>')
         for entry in by_year[year]:
             author = ', '.join(author_names(entry)) or 'Unknown Author'
             title = f'<i>"{entry["title"]}"</i>' if entry.get('title') else 'Untitled'
@@ -222,6 +217,42 @@ def render_html(entries):
                 f'        <p>{citation} {COPY_BUTTONS}</p>\n'
                 f'      </div>'
             )
+
+    return '\n'.join(parts)
+
+
+def short_venue(entry):
+    note = entry.get('note', '').strip()
+    if note.lower().startswith('accepted at '):
+        return note[len('accepted at '):]
+    source = entry.get('journal') or entry.get('booktitle') or ''
+    acronym = re.search(r'\(([A-Z]{3,})\)\s*$', source)
+    if acronym:
+        return f'{acronym.group(1)} {entry.get("year", "")}'.strip()
+    return source
+
+
+def render_featured(entries):
+    featured = sorted(entries, key=lambda e: int(e.get('year', 0)), reverse=True)
+
+    parts = []
+    for entry in featured:
+        links = f'<a href="publications.html#{publication_fragment(entry)}">Citation</a>'
+        github = entry.get('github', '').strip()
+        if github:
+            links += f' · <a href="{github}" target="_blank" rel="noopener noreferrer">Code</a>'
+        parts.append(
+            f'        <div class="col-md-6">\n'
+            f'          <div class="card h-100">\n'
+            f'            <div class="card-body">\n'
+            f'              <h4 class="h6 card-title"><a href="{article_url(entry)}" target="_blank" rel="noopener noreferrer">{entry["title"]}</a></h4>\n'
+            f'              <p class="card-subtitle small text-body-secondary mb-2">{short_venue(entry)}</p>\n'
+            f'              <p class="card-text">{entry["featured"]}</p>\n'
+            f'              <p class="card-text small">{links}</p>\n'
+            f'            </div>\n'
+            f'          </div>\n'
+            f'        </div>'
+        )
 
     return '\n'.join(parts)
 
@@ -264,32 +295,37 @@ def render_jsonld(entries):
     return f'    <script type="application/ld+json">\n    {block}\n    </script>'
 
 
+def fill_markers(path, blocks):
+    with open(path, encoding='utf-8') as f:
+        content = f.read()
+
+    for name, block in blocks.items():
+        content = re.sub(
+            rf'<!-- {name}_START -->.*?<!-- {name}_END -->',
+            lambda _: f'<!-- {name}_START -->\n{block}\n<!-- {name}_END -->',
+            content,
+            flags=re.DOTALL,
+        )
+
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(content)
+
+
 def main():
     with open('bibliography.bib', encoding='utf-8') as f:
         bibtex = f.read()
 
     entries = parse_bibtex(bibtex)
-    html = render_html(entries)
-    jsonld = render_jsonld(entries)
+    featured = [e for e in entries if e.get('featured')]
 
-    with open('index.html', encoding='utf-8') as f:
-        content = f.read()
-
-    new_content = re.sub(
-        r'<!-- BIBLIOGRAPHY_START -->.*?<!-- BIBLIOGRAPHY_END -->',
-        f'<!-- BIBLIOGRAPHY_START -->\n{html}\n<!-- BIBLIOGRAPHY_END -->',
-        content,
-        flags=re.DOTALL,
-    )
-    new_content = re.sub(
-        r'<!-- JSONLD_START -->.*?<!-- JSONLD_END -->',
-        f'<!-- JSONLD_START -->\n{jsonld}\n<!-- JSONLD_END -->',
-        new_content,
-        flags=re.DOTALL,
-    )
-
-    with open('index.html', 'w', encoding='utf-8') as f:
-        f.write(new_content)
+    fill_markers('index.html', {
+        'FEATURED': render_featured(featured),
+        'JSONLD': render_jsonld(featured),
+    })
+    fill_markers('publications.html', {
+        'BIBLIOGRAPHY': render_html(entries),
+        'JSONLD': render_jsonld(entries),
+    })
 
     print(f'Rendered {len(entries)} entries.')
 

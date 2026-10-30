@@ -17,10 +17,10 @@ jobs:
       - name: Render bibliography
         run: python render_bibliography.py
 
-      - name: Fail if index.html was not up to date
+      - name: Fail if the pages were not up to date
         run: |
-          if ! git diff --quiet index.html; then
-            echo "index.html is out of sync with bibliography.bib — run render_bibliography.py locally before committing."
-            git diff index.html
+          if ! git diff --quiet index.html publications.html; then
+            echo "index.html or publications.html is out of sync with bibliography.bib — run render_bibliography.py locally before committing."
+            git diff index.html publications.html
             exit 1
           fi
