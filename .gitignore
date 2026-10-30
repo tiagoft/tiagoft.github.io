@@ -1,0 +1,7 @@
+# Local tool config
+.claude/
+.codex
+
+# Python
+__pycache__/
+*.pyc
