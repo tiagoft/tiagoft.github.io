@@ -207,6 +207,8 @@
 }
     </script>
 <!-- JSONLD_END -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <title>Tiago Fernandes Tavares | Machine Learning Researcher | Insper</title>
@@ -228,13 +230,7 @@
       background-color: #f8f9fa;
       margin-top: 40px;
     }
-    .profile-photo {
-      width: 180px;
-      border-radius: 50%;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
   </style>
-    <!-- Adicione o link para o CSS Bootstrap se necessário -->
 </head>
 <body>
 
@@ -285,7 +281,8 @@
       <a href="https://orcid.org/0000-0002-9104-613X" target="_blank" rel="noopener noreferrer">ORCID</a> |
       <a href="https://lattes.cnpq.br/0738838630843591" target="_blank" rel="noopener noreferrer">Lattes</a> |
       <a href="https://tiagoft.github.io/blog" target="_blank" rel="noopener noreferrer">Blog</a> |
-      <a href="https://www.linkedin.com/in/tiago-fernandes-tavares/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="https://www.linkedin.com/in/tiago-fernandes-tavares/" target="_blank" rel="noopener noreferrer">LinkedIn</a> |
+      <a href="https://github.com/tiagoft" target="_blank" rel="noopener noreferrer">GitHub</a>
     </p>
   </header>
   
@@ -293,7 +290,8 @@
             <section id="about" class="container my-5">
                 
                 <h2>About</h2>
-                <p>I am a researcher at Insper in São Paulo. I study how neural networks recover — or fail to recover — meaningful structure from human-generated data, using language, audio, and music as different surfaces of the same problem in representation learning.</p>
+                <p>I am an Assistant Professor at Insper in São Paulo, where I teach <a href="https://tiagoft.github.io/alglin" target="_blank" rel="noopener noreferrer">Linear Algebra and Information Theory</a>, as well as <a href="https://tiagoft.github.io/nlp_course" target="_blank" rel="noopener noreferrer">Natural Language Processing</a>.</p>
+                <p>My research is in machine learning, with a focus on representation learning. I study how neural networks recover, or fail to recover, meaningful structure from real data, and when, and within what limits, these models become useful tools. I have worked with audio, natural language, and other time-domain signals, including multimodal data.</p>
                 <p>I am always interested in connecting with researchers and engineers working on representation learning, ML systems, and privacy-preserving AI.</p>
             </section>
             
@@ -361,11 +359,13 @@
 
   <!-- Footer -->
   <footer class="text-center py-4">
-    <p>© 2026 Tiago Fernandes Tavares</p>
+    <p>© <span id="copyrightYear">2026</span> Tiago Fernandes Tavares</p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous" defer></script>
   <script>
+    document.getElementById('copyrightYear').textContent = new Date().getFullYear();
+
     // Assemble email at runtime so static source contains no harvestable address
     const u = 'tiagoft1', d = 'insper.edu.br';
     const emailEl = document.getElementById('contact-email');
