@@ -218,10 +218,10 @@
     header {
       margin-top: 70px;
     }
-    h1, h2, h3 {
+    h1, h2, .subtitle {
       font-weight: 600;
     }
-    h3 {
+    .subtitle {
       font-size: 1.1rem;
     }
     footer {
@@ -258,25 +258,25 @@
   <header class="container text-center">
     <div class="row justify-content-center">
       <div class="col-md-4">
-        <img id="avatar" class="img-fluid rounded-circle mb-3" src="tiagofoto.jpg" alt="Tiago Fernandes Tavares" width="300" height="300" decoding="async" onclick="toggleQRCode()">
-        <img id="qrcode" class="img-fluid mb-3" src="qrcode.png" alt="QR code linking to tiagoft.github.io" width="300" height="300" style="display:none;" onclick="toggleQRCode()">
+        <button type="button" id="photoToggle" class="btn btn-link p-0 border-0 mb-3" onclick="toggleQRCode()">
+          <img id="avatar" class="img-fluid rounded-circle mb-2" src="tiagofoto.jpg" alt="Tiago Fernandes Tavares" width="300" height="300" decoding="async">
+          <img id="qrcode" class="img-fluid mb-2" src="qrcode.png" alt="QR code linking to tiagoft.github.io" width="300" height="300" hidden>
+          <span id="photoToggleLabel" class="d-block small">Show QR code</span>
+        </button>
         <script>
           function toggleQRCode() {
             var qrcode = document.getElementById('qrcode');
             var avatar = document.getElementById('avatar');
-            if (qrcode.style.display === 'none') {
-              qrcode.style.display = 'inline';
-              avatar.style.display = 'none';
-            } else {
-              qrcode.style.display = 'none';
-              avatar.style.display = 'inline';
-            }
+            var label = document.getElementById('photoToggleLabel');
+            qrcode.hidden = !qrcode.hidden;
+            avatar.hidden = !qrcode.hidden;
+            label.textContent = qrcode.hidden ? 'Show QR code' : 'Show photo';
           }
         </script>
       </div>
     </div>
     <h1>Tiago Fernandes Tavares</h1>
-    <h3 class="text-body-secondary">Assistant Professor, <a href="https://www.insper.edu.br/">Insper</a></h3>
+    <p class="subtitle text-body-secondary">Assistant Professor, <a href="https://www.insper.edu.br/">Insper</a></p>
     <p class="lead mt-3">
       Researcher in Representation Learning and ML Systems
     </p>
@@ -306,7 +306,7 @@
         <div class="col-md-6">
           <div class="card h-100">
             <div class="card-body">
-              <h4 class="h6 card-title"><a href="https://arxiv.org/abs/2411.08687" target="_blank" rel="noopener noreferrer">Diagnosing Neural Convergence with Topological Alignment Spectra</a></h4>
+              <h3 class="h6 card-title"><a href="https://arxiv.org/abs/2411.08687" target="_blank" rel="noopener noreferrer">Diagnosing Neural Convergence with Topological Alignment Spectra</a></h3>
               <p class="card-subtitle small text-body-secondary mb-2">IJCNN 2026</p>
               <p class="card-text">A topological measure of whether independently trained networks converge to the same representation.</p>
               <p class="card-text small"><a href="publications.html#publication-tavares2026diagnosingneuralconvergencetopological">Citation</a> · <a href="https://github.com/insperML/pointcloudsimilarity" target="_blank" rel="noopener noreferrer">Code</a></p>
@@ -316,7 +316,7 @@
         <div class="col-md-6">
           <div class="card h-100">
             <div class="card-body">
-              <h4 class="h6 card-title"><a href="https://arxiv.org/abs/2509.22211" target="_blank" rel="noopener noreferrer">LogiPart: Local Large Language Models for Data Exploration at Scale with Logical Partitioning</a></h4>
+              <h3 class="h6 card-title"><a href="https://arxiv.org/abs/2509.22211" target="_blank" rel="noopener noreferrer">LogiPart: Local Large Language Models for Data Exploration at Scale with Logical Partitioning</a></h3>
               <p class="card-subtitle small text-body-secondary mb-2">IJCNN 2026</p>
               <p class="card-text">Local LLMs that partition large text collections into logically defined groups, keeping the data on-premises.</p>
               <p class="card-text small"><a href="publications.html#publication-tavares2026logipartlocallargelanguage">Citation</a> · <a href="https://github.com/tiagoft/askme" target="_blank" rel="noopener noreferrer">Code</a></p>
@@ -326,7 +326,7 @@
         <div class="col-md-6">
           <div class="card h-100">
             <div class="card-body">
-              <h4 class="h6 card-title"><a href="https://doi.org/10.1109/ICASSP49660.2025.10888245" target="_blank" rel="noopener noreferrer">On Class Separability Pitfalls In Audio-Text Contrastive Zero-Shot Learning</a></h4>
+              <h3 class="h6 card-title"><a href="https://doi.org/10.1109/ICASSP49660.2025.10888245" target="_blank" rel="noopener noreferrer">On Class Separability Pitfalls In Audio-Text Contrastive Zero-Shot Learning</a></h3>
               <p class="card-subtitle small text-body-secondary mb-2">ICASSP 2025</p>
               <p class="card-text">Shows how zero-shot results in audio-text contrastive models can be inflated by class overlap with pre-training data.</p>
               <p class="card-text small"><a href="publications.html#publication-tavares2025_icassp">Citation</a></p>
@@ -336,7 +336,7 @@
         <div class="col-md-6">
           <div class="card h-100">
             <div class="card-body">
-              <h4 class="h6 card-title"><a href="https://doi.org/10.1109/WASPAA58266.2023.10248180" target="_blank" rel="noopener noreferrer">Unsupervised Improvement of Audio-Text Cross-Modal Representations</a></h4>
+              <h3 class="h6 card-title"><a href="https://doi.org/10.1109/WASPAA58266.2023.10248180" target="_blank" rel="noopener noreferrer">Unsupervised Improvement of Audio-Text Cross-Modal Representations</a></h3>
               <p class="card-subtitle small text-body-secondary mb-2">WASPAA 2023</p>
               <p class="card-text">Improves audio-text cross-modal embeddings without requiring additional labeled audio-text pairs.</p>
               <p class="card-text small"><a href="publications.html#publication-2023">Citation</a></p>

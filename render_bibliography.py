@@ -245,7 +245,7 @@ def render_featured(entries):
             f'        <div class="col-md-6">\n'
             f'          <div class="card h-100">\n'
             f'            <div class="card-body">\n'
-            f'              <h4 class="h6 card-title"><a href="{article_url(entry)}" target="_blank" rel="noopener noreferrer">{entry["title"]}</a></h4>\n'
+            f'              <h3 class="h6 card-title"><a href="{article_url(entry)}" target="_blank" rel="noopener noreferrer">{entry["title"]}</a></h3>\n'
             f'              <p class="card-subtitle small text-body-secondary mb-2">{short_venue(entry)}</p>\n'
             f'              <p class="card-text">{entry["featured"]}</p>\n'
             f'              <p class="card-text small">{links}</p>\n'
