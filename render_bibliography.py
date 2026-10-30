@@ -5,6 +5,8 @@ import re
 BASE_URL = 'https://tiagoft.github.io/'
 PUBLICATIONS_URL = f'{BASE_URL}publications.html'
 PERSON_ID = f'{BASE_URL}#person'
+# Older entries stay in bibliography.bib but are left off the site.
+FIRST_PUBLICATION_YEAR = 2015
 
 
 def publication_fragment(entry):
@@ -316,18 +318,19 @@ def main():
         bibtex = f.read()
 
     entries = parse_bibtex(bibtex)
-    featured = [e for e in entries if e.get('featured')]
+    listed = [e for e in entries if int(e.get('year', 0)) >= FIRST_PUBLICATION_YEAR]
+    featured = [e for e in listed if e.get('featured')]
 
     fill_markers('index.html', {
         'FEATURED': render_featured(featured),
         'JSONLD': render_jsonld(featured),
     })
     fill_markers('publications.html', {
-        'BIBLIOGRAPHY': render_html(entries),
-        'JSONLD': render_jsonld(entries),
+        'BIBLIOGRAPHY': render_html(listed),
+        'JSONLD': render_jsonld(listed),
     })
 
-    print(f'Rendered {len(entries)} entries.')
+    print(f'Rendered {len(listed)} of {len(entries)} entries.')
 
 
 if __name__ == '__main__':
